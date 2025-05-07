@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
+import { FORGOT_PASSWORD_MUTATION } from '../../services/authService';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [forgotPassword] = useMutation(FORGOT_PASSWORD_MUTATION);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,8 +18,14 @@ const ForgotPassword = () => {
     setIsSubmitting(true);
 
     try {
-      // Placeholder for future backend integration
-      setMessage('If an account exists with this email, you will receive password reset instructions.');
+      const { data } = await forgotPassword({
+        variables: { email }
+      });
+
+      if (data.forgotPassword) {
+        setMessage('If an account exists with this email, you will receive password reset instructions.');
+        setEmail(''); // Clear email field after successful submission
+      }
     } catch (err) {
       setError('Something went wrong. Please try again.');
     } finally {
@@ -46,9 +56,6 @@ const ForgotPassword = () => {
             </div>
           )}
           <div>
-            <label htmlFor="email" className="sr-only">
-              Email address
-            </label>
             <input
               id="email"
               name="email"

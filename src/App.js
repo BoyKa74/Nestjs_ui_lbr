@@ -6,6 +6,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import ForgotPassword from './components/Auth/ForgotPassword';
+import ResetPassword from './components/Auth/ResetPassword';
 import Home from './pages/Home';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import AuthGuard from './components/Auth/AuthGuard';
@@ -41,6 +42,10 @@ function App() {
               } 
             />
             <Route 
+              path="/reset-password" 
+              element={<ResetPassword />} 
+            />
+            <Route 
               path="/home" 
               element={
                 <ProtectedRoute>
@@ -49,6 +54,7 @@ function App() {
               } 
             />
             <Route path="/" element={<Navigate to="/home" replace />} />
+            <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>
